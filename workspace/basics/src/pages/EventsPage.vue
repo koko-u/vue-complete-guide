@@ -4,17 +4,36 @@
   export default {
     setup() {
       const counter = ref(0)
-      const add = () => {
-        counter.value += 1
+      const add = (delta: number) => {
+        counter.value += delta
       }
-      const reduce = () => {
-        counter.value -= 1
+      const reduce = (delta: number) => {
+        counter.value -= delta
+      }
+
+      const name = ref('')
+      const confirmedName = ref('')
+      const captureName = (event: Event, foo: string) => {
+        const input = event.target as HTMLInputElement
+        name.value = `${input.value} ${foo}`
+      }
+      const confirmName = () => {
+        confirmedName.value = name.value
+      }
+
+      const submitForm = () => {
+        console.log('Submitted.')
       }
 
       return {
         counter,
         add,
         reduce,
+        name,
+        confirmedName,
+        confirmName,
+        captureName,
+        submitForm,
       }
     },
   }
@@ -26,9 +45,21 @@
   </header>
   <section id="events">
     <h2>Events in Action</h2>
-    <button @click="add">Add</button>
-    <button @click="reduce">Reduce</button>
+    <button @click="add(10)">Add 10</button>
+    <button @click.right="reduce(5)">Reduce 5</button>
     <p>Result: {{ counter }}</p>
+
+    <input
+      type="text"
+      @input="captureName($event, 'Foo')"
+      @keyup.enter="confirmName"
+    />
+    <p>Your name: {{ confirmedName }}</p>
+
+    <form @submit.prevent="submitForm">
+      <input type="text" />
+      <button>Sign up</button>
+    </form>
   </section>
 </template>
 
