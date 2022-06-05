@@ -1,0 +1,17 @@
+version: '3.2'
+services:
+  app:
+    image: "kokouu/nodejs-dev:v3"
+    container_name: app
+    volumes:
+      - type: bind
+        source: ./workspace
+        target: /usr/workspace
+      - type: volume
+        source: basics_node_modules
+        target: /usr/workspace/basics/node_modules
+        volume:
+          nocopy: true
+    tty: true
+volumes:
+  basics_node_modules:
