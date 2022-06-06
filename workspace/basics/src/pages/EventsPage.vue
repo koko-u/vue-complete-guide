@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { ref } from 'vue'
+  import { computed, ref } from 'vue'
 
   export default {
     setup() {
@@ -12,28 +12,23 @@
       }
 
       const name = ref('')
-      const confirmedName = ref('')
-      const captureName = (event: Event, foo: string) => {
-        const input = event.target as HTMLInputElement
-        name.value = `${input.value} ${foo}`
-      }
-      const confirmName = () => {
-        confirmedName.value = name.value
-      }
 
-      const submitForm = () => {
-        console.log('Submitted.')
+      const resetInput = () => {
+        name.value = ''
       }
+      const fullName = computed(() => {
+        if (name.value === '') return ''
+
+        return name.value + ' Yamada'
+      })
 
       return {
         counter,
         add,
         reduce,
         name,
-        confirmedName,
-        confirmName,
-        captureName,
-        submitForm,
+        fullName,
+        resetInput,
       }
     },
   }
@@ -46,20 +41,12 @@
   <section id="events">
     <h2>Events in Action</h2>
     <button @click="add(10)">Add 10</button>
-    <button @click.right="reduce(5)">Reduce 5</button>
+    <button @click="reduce(5)">Reduce 5</button>
     <p>Result: {{ counter }}</p>
 
-    <input
-      type="text"
-      @input="captureName($event, 'Foo')"
-      @keyup.enter="confirmName"
-    />
-    <p>Your name: {{ confirmedName }}</p>
-
-    <form @submit.prevent="submitForm">
-      <input type="text" />
-      <button>Sign up</button>
-    </form>
+    <input v-model="name" type="text" />
+    <button @click="resetInput">Reset Input</button>
+    <p>Your name: {{ fullName }}</p>
   </section>
 </template>
 
